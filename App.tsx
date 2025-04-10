@@ -7,9 +7,12 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 export default function App() {
 
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+
     <SafeAreaView style={{ flex: 1 }}>
       <SafeAreaInsetsContext.Consumer>
         {insets => {
@@ -27,6 +30,7 @@ export default function App() {
         }}
       </SafeAreaInsetsContext.Consumer>
     </SafeAreaView>
+    </GestureHandlerRootView>
 
   );
 }

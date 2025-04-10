@@ -1,4 +1,20 @@
-import { Platform, StyleSheet } from "react-native";
+import {
+  Platform,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  ViewStyle,
+} from 'react-native';
+
+// Define the interface for Button props, extending TouchableOpacityProps
+interface IButtonProps extends TouchableOpacityProps {
+  text: string;
+  textStyle?: StyleProp<TextStyle>; // Custom text style
+  style?: StyleProp<ViewStyle>; // Custom container style
+}
 
 export const styles = StyleSheet.create({
   container: {
@@ -77,7 +93,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    padding: 14,
+    padding: 10,
     borderRadius: 12,
     marginBottom: 10,
     shadowColor: '#000',
@@ -138,4 +154,29 @@ export const styles = StyleSheet.create({
     color: '#333',
   },
 
+  deleteButton: {
+    backgroundColor: '#e74c3c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 10
+  },
+  completeButton: {
+    padding: 10,
+    backgroundColor: '#2ecc71',
+    justifyContent: 'center',
+    borderRadius: 10
+
+  },
+
 });
+
+export const Button = (props: IButtonProps) => {
+  const {text, textStyle, style, ...touchableProps} = props;
+
+  return (
+    <TouchableOpacity style={style} {...touchableProps}>
+      <Text style={textStyle}>{text}</Text>
+    </TouchableOpacity>
+  );
+};

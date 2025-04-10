@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { styles } from '@styles/Taskstyles';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { Swipeable } from 'react-native-gesture-handler';  
 
 export default function TaskItem({ item, tasks, setTasks }: any) {
   const handleToggle = () => {
@@ -16,23 +18,41 @@ export default function TaskItem({ item, tasks, setTasks }: any) {
     setTasks(updated);
   };
 
+  const renderRightActions = () => (
+    <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+      <FontAwesome name="trash" size={24} color="white" />
+    </TouchableOpacity>
+  );
+
+  const renderLeftActions = () => (
+    <TouchableOpacity onPress={handleToggle} style={styles.completeButton}>
+      <FontAwesome name="check" size={24} color="white" />
+    </TouchableOpacity>
+  );
+
   return (
-    <View style={styles.taskItem}>
-      <TouchableOpacity onPress={handleToggle}>
-        <MaterialCommunityIcons
-          name={item.completed ? 'checkbox-marked' : 'checkbox-blank-outline'}
-          size={24}
-          color={item.completed ? '#4caf50' : '#555'}
-        />
-      </TouchableOpacity>
+    <Swipeable
+      renderLeftActions={renderLeftActions}  
+      renderRightActions={renderRightActions}
+    >
+      <View style={styles.taskItem}>
+        <TouchableOpacity onPress={handleToggle}>
+          <MaterialCommunityIcons
+            name={item.completed ? 'checkbox-marked' : 'checkbox-blank-outline'}
+            size={24}
+            color={item.completed ? '#4caf50' : '#555'}
+          />
+        </TouchableOpacity>
 
-      <Text style={[styles.taskText, item.completed && styles.taskTextCompleted]}>
-        {item.text}
-      </Text>
+        <Text style={[styles.taskText, item.completed && styles.taskTextCompleted]}>
+          {item.text}
+        </Text>
 
-      <TouchableOpacity onPress={handleDelete}>
-        <MaterialCommunityIcons name="delete-outline" size={24} color="#900" />
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={handleDelete}>
+          <MaterialCommunityIcons name="delete-outline" size={24} color="#900" />
+        </TouchableOpacity>
+      </View>
+    </Swipeable>
+    
   );
 }
