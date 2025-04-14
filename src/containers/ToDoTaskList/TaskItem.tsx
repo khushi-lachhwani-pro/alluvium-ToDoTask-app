@@ -3,9 +3,9 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { styles } from '@styles/Taskstyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Swipeable } from 'react-native-gesture-handler';  
+import { Swipeable } from 'react-native-gesture-handler';
 
-export default function TaskItem({ item, tasks, setTasks }: any) {
+export default function TaskItem({ item, tasks, setTasks, onEdit }:any) {
   const handleToggle = () => {
     const updated = tasks.map((task: any) =>
       task.id === item.id ? { ...task, completed: !task.completed } : task
@@ -32,7 +32,7 @@ export default function TaskItem({ item, tasks, setTasks }: any) {
 
   return (
     <Swipeable
-      renderLeftActions={renderLeftActions}  
+      renderLeftActions={renderLeftActions}
       renderRightActions={renderRightActions}
     >
       <View style={styles.taskItem}>
@@ -51,8 +51,11 @@ export default function TaskItem({ item, tasks, setTasks }: any) {
         <TouchableOpacity onPress={handleDelete}>
           <MaterialCommunityIcons name="delete-outline" size={24} color="#900" />
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => onEdit(item.id)}>
+          <MaterialCommunityIcons name="pencil" size={20} color="#007AFF" />
+        </TouchableOpacity>
       </View>
     </Swipeable>
-    
+
   );
 }

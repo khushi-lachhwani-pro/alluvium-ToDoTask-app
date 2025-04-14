@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TextInput, TouchableOpacity, Text } from 'react-native';
 import { styles } from '@styles/Taskstyles';
 
-export default function TaskInput({ taskText, setTaskText, addTask }: any) {
+export default function TaskInput({ taskText, setTaskText, addTask, isEditing }: any) {
   return (
     <View style={styles.inputContainer}>
       <TextInput
@@ -12,7 +12,7 @@ export default function TaskInput({ taskText, setTaskText, addTask }: any) {
         style={styles.input}
       />
       <TouchableOpacity style={styles.addButton} onPress={addTask}>
-        <Text style={styles.addButtonText}>Add</Text>
+        <Text style={styles.addButtonText}>{isEditing ? 'Update Task' : 'Add Task'}</Text>
       </TouchableOpacity>
     </View>
   );

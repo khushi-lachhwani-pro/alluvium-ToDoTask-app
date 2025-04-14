@@ -24,6 +24,9 @@ export default function Tasklist() {
     const [filter, setFilter] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
 
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+
     const TASKS_KEY = '@tasks';
 
     useEffect(() => {
@@ -54,12 +57,33 @@ export default function Tasklist() {
     }, [tasks]);
 
     const addTask = () => {
-        if (taskText.trim()) {
+        const trimmedText = taskText.trim();
+        if (!trimmedText) return;
+
+        if (isEditing && editingTaskId) {
+            setTasks(prev =>
+                prev.map(task =>
+                    task.id === editingTaskId ? { ...task, text: trimmedText } : task
+                )
+            );
+            setIsEditing(false);
+            setEditingTaskId(null);
+        } else {
             setTasks(prev => [
                 ...prev,
-                { id: Date.now().toString(), text: taskText, completed: false },
+                { id: Date.now().toString(), text: trimmedText, completed: false },
             ]);
-            setTaskText('');
+        }
+
+        setTaskText('');
+    };
+
+    const startEditingTask = (taskId: string) => {
+        const taskToEdit = tasks.find(t => t.id === taskId);
+        if (taskToEdit) {
+            setTaskText(taskToEdit.text);
+            setEditingTaskId(taskId);
+            setIsEditing(true);
         }
     };
 
@@ -93,7 +117,12 @@ export default function Tasklist() {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}
             >
-                <TaskInput taskText={taskText} setTaskText={setTaskText} addTask={addTask} />
+                <TaskInput
+                    taskText={taskText}
+                    setTaskText={setTaskText}
+                    addTask={addTask}
+                    isEditing={isEditing}
+                />
                 <TaskFilter filter={filter} setFilter={setFilter} />
 
                 <View style={styles.searchContainer}>
@@ -114,8 +143,12 @@ export default function Tasklist() {
                             data={filteredTasks}
                             keyExtractor={(item: any) => item.id}
                             renderItem={({ item }) => (
-                                <TaskItem item={item} tasks={tasks} setTasks={setTasks} />
-                            )}
+                                <TaskItem
+                                    item={item}
+                                    tasks={tasks}
+                                    setTasks={setTasks}
+                                    onEdit={startEditingTask}
+                                />)}
                             contentContainerStyle={styles.taskList}
                         />
                     </>
